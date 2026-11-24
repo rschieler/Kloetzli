@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#1f2126">
+<title>Klötzli</title>
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" type="image/png" href="icon-192.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<style>html,body{margin:0;height:100%;background:#1f2126}</style>
+<script>
+  // Weiche: öffnet das zuletzt gewählte Design (Standard: Retro)
+  let d = 'retro';
+  try { d = localStorage.getItem('kloetzli.design') === 'modern' ? 'modern' : 'retro'; } catch (e) {}
+  location.replace(d + '.html');
+</script>
+</head>
+<body>
+<noscript>Klötzli braucht JavaScript.</noscript>
+</body>
+</html>
