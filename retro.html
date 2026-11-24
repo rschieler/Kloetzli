@@ -21,29 +21,30 @@
 html,body{margin:0;height:100%;background:#1f2126;overflow:hidden;overscroll-behavior:none}
 body{display:flex;align-items:center;justify-content:center;font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
   -webkit-user-select:none;user-select:none;-webkit-touch-callout:none;-webkit-tap-highlight-color:transparent;touch-action:manipulation}
-:root{--dp:clamp(118px,36vw,158px);--ab:clamp(54px,16vw,68px);--ink:#2b3768}
+:root{--dp:clamp(108px,min(34vw,19dvh),156px);--ab:clamp(50px,min(15vw,8.5dvh),66px);--ink:#2b3768}
 #device{position:relative;width:min(100vw,440px);height:100vh;height:100dvh;max-height:920px;display:flex;flex-direction:column;
-  padding:calc(10px + env(safe-area-inset-top)) 16px calc(8px + env(safe-area-inset-bottom));
+  padding:calc(8px + env(safe-area-inset-top)) 8px calc(22px + env(safe-area-inset-bottom));
   background:linear-gradient(168deg,#e8e4db 0%,#d8d3c8 55%,#cac4b8 100%);
   box-shadow:inset 0 2px 0 rgba(255,255,255,.7),inset 0 -4px 0 rgba(0,0,0,.12),0 24px 70px rgba(0,0,0,.55)}
 @media (min-width:480px) and (min-height:720px){#device{border-radius:24px;height:min(calc(100dvh - 40px),880px)}}
-#bezel{position:relative;background:linear-gradient(180deg,#5c6271,#4a4f5c);border-radius:14px;padding:12px 22px 12px;
+#bezel{position:relative;background:linear-gradient(180deg,#5c6271,#4a4f5c);border-radius:14px;padding:14px 10px 10px;
   box-shadow:inset 0 1px 0 rgba(255,255,255,.18),0 1px 0 rgba(255,255,255,.6)}
-#led{position:absolute;left:8px;top:50%;width:8px;height:8px;margin-top:-4px;border-radius:50%;background:#e2304a;box-shadow:0 0 6px #ff4a66}
-#screenWrap{position:relative;margin:0 auto;width:min(100%,calc((100vh - 350px) * 1.1111));width:min(100%,calc((100dvh - 350px) * 1.1111));
+#led{position:absolute;left:12px;top:4px;width:6px;height:6px;border-radius:50%;background:#e2304a;box-shadow:0 0 6px #ff4a66}
+#screenWrap{position:relative;margin:0 auto;width:min(100%,calc((100vh - 320px) * 1.1111));
+  width:min(100%,calc((100dvh - 320px - env(safe-area-inset-top) - env(safe-area-inset-bottom)) * 1.1111));
   aspect-ratio:160/144;background:#9bbc0f;box-shadow:0 0 0 2px #36421c}
 #screen{position:absolute;inset:0;width:100%;height:100%;image-rendering:pixelated}
 #grid{position:absolute;inset:0;pointer-events:none;
   background-image:linear-gradient(to right,rgba(15,56,15,.07) 1px,transparent 1px),linear-gradient(to bottom,rgba(15,56,15,.07) 1px,transparent 1px);
   background-size:calc(100% / 160) calc(100% / 144)}
-#brand{display:flex;align-items:center;justify-content:space-between;padding:8px 4px 0}
+#brand{display:flex;align-items:center;justify-content:space-between;padding:6px 6px 0}
 #brand b{font-style:italic;font-weight:900;font-size:22px;letter-spacing:.5px;color:var(--ink)}
 #helpBtn{display:flex;align-items:center;gap:7px;height:42px;padding:0 16px 0 12px;border-radius:21px;border:0;background:var(--ink);color:#eeeae2;
   font:800 15px system-ui,sans-serif;letter-spacing:.3px;box-shadow:0 3px 0 rgba(0,0,0,.28);cursor:pointer}
 #helpBtn:active{transform:translateY(2px);box-shadow:0 1px 0 rgba(0,0,0,.28)}
 #helpBtn svg{width:19px;height:19px;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
 #helpBtn:focus-visible,.round:focus-visible{outline:3px solid var(--ink);outline-offset:3px}
-#controls{flex:1;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);grid-template-rows:1fr auto;align-items:center;min-height:210px}
+#controls{flex:1;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);grid-template-rows:1fr auto;align-items:center;min-height:200px}
 .cell{display:flex;justify-content:center;align-items:center}
 #dpBase{width:calc(var(--dp) + 18px);height:calc(var(--dp) + 18px);border-radius:50%;display:flex;align-items:center;justify-content:center;
   background:radial-gradient(circle,rgba(0,0,0,.10) 55%,rgba(0,0,0,0) 72%)}
@@ -69,12 +70,12 @@ body{display:flex;align-items:center;justify-content:center;font-family:system-u
   background:radial-gradient(circle at 35% 30%,#cc4a77,#93214b 68%);box-shadow:0 5px 0 #5c1230,0 7px 12px rgba(0,0,0,.32)}
 .round.on{transform:translateY(4px);box-shadow:0 1px 0 #5c1230,0 2px 4px rgba(0,0,0,.3)}
 .lbl{font-weight:900;font-style:italic;color:var(--ink);font-size:15px;letter-spacing:1px}
-#ss{grid-column:1 / 3;display:flex;justify-content:center;gap:22px;padding-bottom:4px}
-.pill{display:flex;flex-direction:column;align-items:center;gap:6px;transform:rotate(-25deg);padding:12px 8px;touch-action:none;cursor:pointer}
+#ss{grid-column:1 / 3;display:flex;justify-content:center;gap:22px;padding-bottom:clamp(6px,3dvh,32px)}
+.pill{display:flex;flex-direction:column;align-items:center;gap:5px;transform:rotate(-25deg);padding:8px 8px;touch-action:none;cursor:pointer}
 .pill i{display:block;width:50px;height:13px;border-radius:7px;background:linear-gradient(180deg,#8a8c93,#6e7077);box-shadow:0 2px 0 #4d4f54}
 .pill.on i{transform:translateY(2px);box-shadow:none}
 .pill span{font-size:10px;font-weight:900;color:var(--ink);letter-spacing:1.5px}
-#speaker{position:absolute;right:20px;bottom:calc(14px + env(safe-area-inset-bottom));width:52px;height:36px;pointer-events:none;opacity:.75;
+#speaker{position:absolute;right:16px;bottom:calc(22px + env(safe-area-inset-bottom));width:52px;height:36px;pointer-events:none;opacity:.75;
   background-image:radial-gradient(circle,rgba(0,0,0,.3) 2.2px,transparent 2.7px);background-size:9px 9px;transform:rotate(-25deg)}
 #help{position:absolute;inset:0;z-index:5;display:none;overflow:auto;padding:calc(22px + env(safe-area-inset-top)) 22px 22px;
   background:rgba(22,24,29,.96);color:#ecebe6;font-size:15px;line-height:1.5;border-radius:inherit;-webkit-user-select:text;user-select:text}
@@ -153,7 +154,14 @@ const wrap=document.getElementById('screenWrap');
 function fit(){const r=wrap.getBoundingClientRect(),d=Math.min(window.devicePixelRatio||1,3);
   const w=Math.max(SW,Math.round(r.width*d)),h=Math.max(SH,Math.round(r.height*d));
   if(screen.width!==w||screen.height!==h){screen.width=w;screen.height=h;}}
-const ro=new ResizeObserver(fit);ro.observe(wrap);window.addEventListener('resize',fit);fit();
+const ro=new ResizeObserver(fit);ro.observe(wrap);window.addEventListener('resize',()=>{fit();fitDevice();});fit();
+// Sicherheitsnetz: ragt unten etwas über den Rand (z. B. grosse Systemschrift), Bildschirm verkleinern bis alles passt
+const dev=document.getElementById('device');
+function fitDevice(){wrap.style.width='';let w=wrap.getBoundingClientRect().width,n=0;
+  const over=()=>{const pad=parseFloat(getComputedStyle(dev).paddingBottom)||0;const low=Math.max(...[...document.querySelectorAll('.pill')].map(e=>e.getBoundingClientRect().bottom));
+    return low>dev.getBoundingClientRect().bottom-pad+6||dev.scrollHeight>dev.clientHeight+1;};
+  while(over()&&n++<60&&w>160){w-=6;wrap.style.width=w+'px';}}
+fitDevice();if(document.fonts)document.fonts.ready.then(fitDevice);
 
 // ---------- Kacheln ----------
 function tile(rows){const c=document.createElement('canvas');c.width=c.height=8;const x=c.getContext('2d');
