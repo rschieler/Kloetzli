@@ -1,11 +1,12 @@
 // Klötzli – Service Worker
 // Bei jeder Änderung an Dateien die Versionsnummer erhöhen.
-const CACHE = 'kloetzli-v2';
+const CACHE = 'kloetzli-v3';
 const FILES = ['./', './index.html', './retro.html', './modern.html', './manifest.webmanifest',
   './icon-192.png', './icon-512.png', './icon-maskable-512.png', './apple-touch-icon.png'];
 
 self.addEventListener('install', e => {
-  e.waitUntil(caches.open(CACHE).then(c => c.addAll(FILES)).then(() => self.skipWaiting()));
+  // cache:'reload' holt die Dateien am Zwischenspeicher von GitHub vorbei frisch vom Server
+  e.waitUntil(caches.open(CACHE).then(c => c.addAll(FILES.map(f => new Request(f, {cache: 'reload'})))).then(() => self.skipWaiting()));
 });
 
 // Nur eigene alte Caches löschen: Yatzy, Rotate Rings usw. liegen auf derselben Domain.
@@ -17,7 +18,7 @@ self.addEventListener('activate', e => {
 
 // Selbstheilung: Falls eine andere App auf der Domain unseren Cache gelöscht hat, beim nächsten Start neu füllen.
 const heal = () => caches.open(CACHE)
-  .then(c => c.match('./modern.html').then(hit => hit || c.addAll(FILES))).catch(() => {});
+  .then(c => c.match('./modern.html').then(hit => hit || c.addAll(FILES.map(f => new Request(f, {cache: 'reload'}))))).catch(() => {});
 
 self.addEventListener('fetch', e => {
   const req = e.request;
@@ -26,7 +27,8 @@ self.addEventListener('fetch', e => {
   // Seiten: zuerst Netz (für Updates), ohne Netz aus dem Cache
   if (req.mode === 'navigate') {
     e.waitUntil(heal());
-    e.respondWith(fetch(req).then(r => {
+    // no-cache: beim Server nachfragen, ob es eine neue Version gibt (GitHub Pages hält Seiten sonst bis 10 Min.)
+    e.respondWith(fetch(req.url, {cache: 'no-cache', credentials: 'same-origin'}).then(r => {
       if (r.ok) { const c = r.clone(); caches.open(CACHE).then(x => x.put(req, c)); }
       return r;
     }).catch(() => caches.match(req, {ignoreSearch: true}).then(hit => hit || caches.match('./index.html'))));

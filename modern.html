@@ -590,7 +590,13 @@ requestAnimationFrame(frame);
 document.querySelectorAll('[data-design=retro]').forEach(b=>b.addEventListener('click',()=>{
   try{localStorage.setItem('kloetzli.design','retro');}catch(e){}
   Sound.stopMusic();wakeOff();location.replace('retro.html');}));
-if('serviceWorker' in navigator)navigator.serviceWorker.register('sw.js').catch(()=>{});
+try{localStorage.setItem('kloetzli.design','modern');}catch(e){}
+if('serviceWorker' in navigator){
+  const hadCtrl=!!navigator.serviceWorker.controller;let reloaded=false;
+  navigator.serviceWorker.register('sw.js').catch(()=>{});
+  // Neue Version aktiv: im Menü sofort neu laden, sonst beim nächsten Start
+  navigator.serviceWorker.addEventListener('controllerchange',()=>{if(hadCtrl&&!reloaded&&S.mode==='menu'){reloaded=true;location.reload();}});
+}
 }
 </script>
 </body>
