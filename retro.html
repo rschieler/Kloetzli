@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
-<meta name="theme-color" content="#1f2126">
+<meta name="theme-color" content="#e2ded5">
 <title>Klötzli</title>
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" type="image/png" href="icon-192.png">
@@ -22,16 +22,16 @@ html,body{margin:0;height:100%;background:#1f2126;overflow:hidden;overscroll-beh
 body{display:flex;align-items:center;justify-content:center;font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
   -webkit-user-select:none;user-select:none;-webkit-touch-callout:none;-webkit-tap-highlight-color:transparent;touch-action:manipulation}
 :root{--dp:clamp(108px,min(34vw,19dvh),156px);--ab:clamp(50px,min(15vw,8.5dvh),66px);--ink:#2b3768}
-#device{position:relative;width:min(100vw,440px);height:100vh;height:100dvh;max-height:920px;display:flex;flex-direction:column;
+#device{position:relative;width:min(100vw,440px);height:100vh;height:var(--appH,100dvh);max-height:920px;display:flex;flex-direction:column;
   padding:calc(8px + env(safe-area-inset-top)) 8px calc(22px + env(safe-area-inset-bottom));
   background:linear-gradient(168deg,#e8e4db 0%,#d8d3c8 55%,#cac4b8 100%);
   box-shadow:inset 0 2px 0 rgba(255,255,255,.7),inset 0 -4px 0 rgba(0,0,0,.12),0 24px 70px rgba(0,0,0,.55)}
-@media (min-width:480px) and (min-height:720px){#device{border-radius:24px;height:min(calc(100dvh - 40px),880px)}}
+@media (min-width:480px) and (min-height:720px){#device{border-radius:24px;height:min(calc(var(--appH,100dvh) - 40px),880px)}}
 #bezel{position:relative;background:linear-gradient(180deg,#5c6271,#4a4f5c);border-radius:14px;padding:14px 10px 10px;
   box-shadow:inset 0 1px 0 rgba(255,255,255,.18),0 1px 0 rgba(255,255,255,.6)}
 #led{position:absolute;left:12px;top:4px;width:6px;height:6px;border-radius:50%;background:#e2304a;box-shadow:0 0 6px #ff4a66}
 #screenWrap{position:relative;margin:0 auto;width:min(100%,calc((100vh - 320px) * 1.1111));
-  width:min(100%,calc((100dvh - 320px - env(safe-area-inset-top) - env(safe-area-inset-bottom)) * 1.1111));
+  width:min(100%,calc((var(--appH,100dvh) - 320px - env(safe-area-inset-top) - env(safe-area-inset-bottom)) * 1.1111));
   aspect-ratio:160/144;background:#9bbc0f;box-shadow:0 0 0 2px #36421c}
 #screen{position:absolute;inset:0;width:100%;height:100%;image-rendering:pixelated}
 #grid{position:absolute;inset:0;pointer-events:none;
@@ -145,6 +145,13 @@ body{display:flex;align-items:center;justify-content:center;font-family:system-u
 {
 'use strict';
 // ---------- Bildschirm ----------
+// Sichtbare Höhe messen (100dvh stimmt auf manchen Android-Handys beim Start nicht)
+function setAppH(){document.documentElement.style.setProperty('--appH',Math.round(window.innerHeight)+'px');}
+setAppH();window.addEventListener('resize',setAppH);window.addEventListener('orientationchange',()=>setTimeout(setAppH,300));
+if(window.visualViewport)visualViewport.addEventListener('resize',setAppH);
+[150,500,1200,2500].forEach(t=>setTimeout(()=>{setAppH();if(typeof fitDevice==='function')setTimeout(fitDevice,50);},t));
+document.addEventListener('visibilitychange',()=>{if(!document.hidden)setTimeout(setAppH,250);});
+
 const PAL=['#9bbc0f','#8bac0f','#306230','#0f380f'];
 const SW=160,SH=144;
 const buf=document.createElement('canvas');buf.width=SW;buf.height=SH;

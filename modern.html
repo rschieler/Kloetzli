@@ -4,8 +4,12 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
 <title>Klötzli</title>
-<meta name="theme-color" content="#eef1f6" media="(prefers-color-scheme: light)">
-<meta name="theme-color" content="#0d1016" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#eef1f6">
+<script>
+  // Darstellung vor dem ersten Zeichnen setzen (Standard: Hell)
+  (function(){let t='light';try{const s=JSON.parse(localStorage.getItem('kloetzli-modern.v1')||'{}');if(s.set&&s.set.theme)t=s.set.theme;}catch(e){}
+   if(t!=='auto')document.documentElement.setAttribute('data-theme',t);})();
+</script>
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" type="image/png" href="icon-192.png">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
@@ -31,23 +35,24 @@
 html,body{margin:0;height:100%;overflow:hidden;overscroll-behavior:none}
 body{background:radial-gradient(120% 70% at 50% -10%,var(--bg2),var(--bg) 62%);color:var(--ink);font:16px/1.4 Outfit,system-ui,-apple-system,"Segoe UI",sans-serif;
   -webkit-user-select:none;user-select:none;-webkit-touch-callout:none;-webkit-tap-highlight-color:transparent;touch-action:manipulation}
-#app{height:100vh;height:100dvh;max-width:520px;margin:0 auto;display:flex;flex-direction:column;gap:10px;
-  padding:calc(8px + env(safe-area-inset-top)) 14px calc(10px + env(safe-area-inset-bottom))}
+#app{height:100vh;height:var(--appH,100dvh);max-width:520px;margin:0 auto;display:flex;flex-direction:column;gap:8px;
+  padding:calc(6px + env(safe-area-inset-top)) 12px calc(10px + env(safe-area-inset-bottom))}
 header{display:flex;align-items:center;justify-content:space-between}
 .brand{display:flex;align-items:center;gap:8px;font-weight:800;font-size:22px;letter-spacing:-.3px}
 .logo{width:26px;height:26px;flex:none}
 .hb{display:flex;gap:6px}
-.ib{width:44px;height:44px;border-radius:50%;border:0;background:var(--panel);color:var(--ink);display:grid;place-items:center;
+.ib{width:42px;height:42px;border-radius:50%;border:0;background:var(--panel);color:var(--ink);display:grid;place-items:center;
   box-shadow:0 2px 8px var(--shadow);cursor:pointer;font:800 18px Outfit,system-ui,sans-serif}
 .ib svg{width:20px;height:20px}
 svg.ic{fill:none;stroke:currentColor;stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round}
-#stats{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(0,1fr) minmax(0,1fr);gap:8px}
-.st{background:var(--panel);border-radius:14px;padding:7px 12px;box-shadow:0 2px 10px var(--shadow)}
+#info{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:8px;align-items:stretch}
+.st{background:var(--panel);border-radius:14px;padding:6px 12px;box-shadow:0 2px 10px var(--shadow);display:flex;flex-direction:column;justify-content:center}
+.st small{display:block;font-size:13px;color:var(--muted);font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.st small b{display:inline;font-size:13px;color:var(--ink)}
 .k{display:block;font-size:13px;color:var(--muted);font-weight:600}
-.st b{display:block;font-size:clamp(18px,5.4vw,23px);font-weight:800;font-variant-numeric:tabular-nums;white-space:nowrap;line-height:1.15;overflow:hidden;text-overflow:ellipsis}
-#play{flex:1;min-height:0;display:flex;justify-content:center;align-items:flex-start;gap:10px}
-.side{width:var(--side,60px);flex:none}
-.card{background:var(--panel);border-radius:14px;padding:8px;box-shadow:0 2px 10px var(--shadow);display:flex;flex-direction:column;align-items:center;gap:6px}
+.st>b{display:block;font-size:clamp(19px,5.6vw,24px);font-weight:800;font-variant-numeric:tabular-nums;white-space:nowrap;line-height:1.15;overflow:hidden;text-overflow:ellipsis}
+#play{flex:1;min-height:0;display:flex;justify-content:center;align-items:center}
+.card{background:var(--panel);border-radius:14px;padding:6px 8px 8px;box-shadow:0 2px 10px var(--shadow);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px}
 #holdCard{cursor:pointer}
 #bw{position:relative;flex:none;padding:5px;border-radius:16px;background:var(--board);box-shadow:0 0 0 1.5px var(--boardline),0 10px 30px var(--shadow);
   transition:box-shadow .3s;touch-action:none}
@@ -61,8 +66,8 @@ svg.ic{fill:none;stroke:currentColor;stroke-width:2.4;stroke-linecap:round;strok
 .pop.small{font-size:15px}
 .pop.lvl{background:#3f6fe8}
 @keyframes pop{0%{opacity:0;transform:scale(.6)}12%{opacity:1;transform:scale(1.08)}22%{transform:scale(1)}75%{opacity:1}100%{opacity:0;transform:translateY(-18px)}}
-#pad{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
-#pad button{height:clamp(52px,8vh,70px);border:0;border-radius:18px;background:var(--panel);color:var(--ink);display:grid;place-items:center;
+#pad{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
+#pad button{height:clamp(48px,7vh,62px);border:0;border-radius:18px;background:var(--panel);color:var(--ink);display:grid;place-items:center;
   box-shadow:0 3px 0 var(--edge),0 6px 16px var(--shadow);touch-action:none;cursor:pointer;font:600 15px Outfit,system-ui,sans-serif}
 #pad button svg{width:28px;height:28px}
 #pad button.on{transform:translateY(2px);box-shadow:0 1px 0 var(--edge),0 2px 6px var(--shadow);background:var(--press)}
@@ -81,7 +86,9 @@ svg.ic{fill:none;stroke:currentColor;stroke-width:2.4;stroke-linecap:round;strok
 .seg{display:grid;grid-template-columns:1fr 1fr;background:var(--press);border-radius:14px;padding:4px}
 .seg button{height:44px;border:0;border-radius:11px;background:transparent;color:var(--muted);font:600 16px Outfit,system-ui,sans-serif;cursor:pointer}
 .seg button.sel{background:var(--panel);color:var(--ink);box-shadow:0 2px 8px var(--shadow)}
-.dseg{width:190px}.dseg button{height:40px}
+.dseg{width:190px}.dseg button,.tseg button{height:40px}
+.tseg{width:220px;grid-template-columns:repeat(3,1fr)}
+.btn2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 .row{display:flex;align-items:center;justify-content:space-between;gap:12px;min-height:44px;font-weight:600}
 .stepper{display:flex;align-items:center;gap:6px}
 .stepper button{width:44px;height:44px;border-radius:12px;border:0;background:var(--press);color:var(--ink);font:800 20px Outfit,system-ui,sans-serif;cursor:pointer}
@@ -120,15 +127,13 @@ button:focus-visible,.sw:focus-visible,#holdCard:focus-visible{outline:3px solid
       <button class="ib" id="pauseB" aria-label="Pause"><svg class="ic" viewBox="0 0 24 24"><path d="M9 6v12M15 6v12"/></svg></button>
     </div>
   </header>
-  <section id="stats">
-    <div class="st"><span class="k" id="k1">Punkte</span><b id="v1">0</b></div>
-    <div class="st"><span class="k" id="k2">Level</span><b id="v2">1</b></div>
-    <div class="st"><span class="k" id="k3">Linien</span><b id="v3">0</b></div>
+  <section id="info">
+    <div class="card" id="holdCard" role="button" tabindex="0" aria-label="Stein halten"><span class="k">Halten</span><canvas id="holdC"></canvas></div>
+    <div class="st"><span class="k" id="k1">Punkte</span><b id="v1">0</b><small><span id="k2">Level</span> <b id="v2">1</b> · <span id="k3">Linien</span> <b id="v3">0</b></small></div>
+    <div class="card"><span class="k">Nächste</span><canvas id="nextC"></canvas></div>
   </section>
   <section id="play">
-    <div class="side"><div class="card" id="holdCard" role="button" tabindex="0" aria-label="Stein halten"><span class="k">Halten</span><canvas id="holdC"></canvas></div></div>
     <div id="bw"><canvas id="board" aria-label="Spielfeld"></canvas><div id="pops"></div></div>
-    <div class="side"><div class="card"><span class="k">Nächste</span><canvas id="nextC"></canvas></div></div>
   </section>
   <section id="pad">
     <button data-k="left" aria-label="Links"><svg class="ic" viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></button>
@@ -147,12 +152,9 @@ button:focus-visible,.sw:focus-visible,#holdCard:focus-visible{outline:3px solid
     <div class="seg" role="group" aria-label="Spielart"><button data-mode="marathon">Marathon</button><button data-mode="sprint">Sprint 40</button></div>
     <p class="note" id="modeNote"></p>
     <div class="row" id="lvRow"><span>Startlevel</span><div class="stepper"><button id="lvM" aria-label="Level tiefer">−</button><b id="lvV">1</b><button id="lvP" aria-label="Level höher">+</button></div></div>
-    <label class="row"><span>Musik</span><input type="checkbox" class="sw" id="oMusic"></label>
-    <label class="row"><span>Schattenstein</span><input type="checkbox" class="sw" id="oGhost"></label>
-    <div class="row"><span>Design</span><div class="seg dseg" role="group" aria-label="Design"><button data-design="retro" aria-pressed="false">Retro</button><button class="sel" aria-pressed="true">Modern</button></div></div>
     <button class="primary" id="playB">Spielen</button>
     <div class="best"><span class="k" id="bestK">Bestenliste</span><ol id="bestL"></ol></div>
-    <button class="second" id="helpB2">Steuerung</button>
+    <div class="btn2"><button class="second" id="menSet">Einstellungen</button><button class="second" id="helpB2">Steuerung</button></div>
   </div>
   <div class="panel" id="pPause" hidden>
     <h2>Pause</h2>
@@ -171,6 +173,7 @@ button:focus-visible,.sw:focus-visible,#holdCard:focus-visible{outline:3px solid
   <div class="panel" id="pSet" hidden>
     <h2>Einstellungen</h2>
     <div class="row"><span>Design</span><div class="seg dseg" role="group" aria-label="Design"><button data-design="retro" aria-pressed="false">Retro</button><button class="sel" aria-pressed="true">Modern</button></div></div>
+    <div class="row"><span>Darstellung</span><div class="seg tseg" role="group" aria-label="Darstellung"><button data-theme-set="light">Hell</button><button data-theme-set="dark">Dunkel</button><button data-theme-set="auto">Auto</button></div></div>
     <label class="row"><span>Musik</span><input type="checkbox" class="sw" id="sMusic"></label>
     <label class="row"><span>Schattenstein</span><input type="checkbox" class="sw" id="sGhost"></label>
     <label class="row"><span>Ton</span><input type="checkbox" class="sw" id="sSound"></label>
@@ -229,7 +232,7 @@ const gms=lv=>Math.pow(0.8-(Math.min(lv,20)-1)*0.007,Math.min(lv,20)-1)*1000;
 
 // ---------- Speicher ----------
 const KEY='kloetzli-modern.v1';
-let store={set:{mode:'marathon',level:1,music:true,ghost:true,mute:false},best:{marathon:[],sprint:[]}};
+let store={set:{mode:'marathon',level:1,music:true,ghost:true,mute:false,theme:'light'},best:{marathon:[],sprint:[]}};
 try{const s=JSON.parse(localStorage.getItem(KEY));if(s&&s.set&&s.best)store={set:{...store.set,...s.set},best:{...store.best,...s.best}};}catch(e){}
 const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(store));}catch(e){}};
 
@@ -451,7 +454,7 @@ function syncMenu(){
   const s=store.set;
   document.querySelectorAll('.seg [data-mode]').forEach(b=>b.classList.toggle('sel',b.dataset.mode===s.mode));
   $('lvRow').hidden=s.mode!=='marathon';$('lvV').textContent=s.level;
-  $('oMusic').checked=s.music;$('oGhost').checked=s.ghost;$('sMusic').checked=s.music;$('sGhost').checked=s.ghost;$('sSound').checked=!s.mute;
+  $('sMusic').checked=s.music;$('sGhost').checked=s.ghost;$('sSound').checked=!s.mute;
   $('modeNote').textContent=s.mode==='marathon'?'Endlos spielen – alle 10 Linien wird es schneller.':'40 Linien so schnell wie möglich abbauen.';
   $('bestK').textContent='Bestenliste '+(s.mode==='marathon'?'Marathon':'Sprint 40');
   const L=store.best[s.mode];
@@ -462,8 +465,18 @@ function syncMenu(){
 document.querySelectorAll('.seg [data-mode]').forEach(b=>b.addEventListener('click',()=>{store.set.mode=b.dataset.mode;save();syncMenu();Sound.sfx('ui');}));
 $('lvM').addEventListener('click',()=>{store.set.level=Math.max(1,store.set.level-1);save();syncMenu();Sound.sfx('ui');});
 $('lvP').addEventListener('click',()=>{store.set.level=Math.min(15,store.set.level+1);save();syncMenu();Sound.sfx('ui');});
-['oMusic','sMusic'].forEach(id=>$(id).addEventListener('change',e=>{store.set.music=e.target.checked;save();syncMenu();}));
-['oGhost','sGhost'].forEach(id=>$(id).addEventListener('change',e=>{store.set.ghost=e.target.checked;save();syncMenu();}));
+$('sMusic').addEventListener('change',e=>{store.set.music=e.target.checked;save();syncMenu();});
+$('sGhost').addEventListener('change',e=>{store.set.ghost=e.target.checked;save();syncMenu();});
+function applyTheme(){
+  const t=store.set.theme||'light',root=document.documentElement;
+  if(t==='auto')root.removeAttribute('data-theme');else root.setAttribute('data-theme',t);
+  const dark=t==='dark'||(t==='auto'&&matchMedia('(prefers-color-scheme: dark)').matches);
+  document.querySelector('meta[name=theme-color]').setAttribute('content',dark?'#0b0d12':'#eef1f6');
+  document.querySelectorAll('[data-theme-set]').forEach(b=>{const on=b.dataset.themeSet===t;b.classList.toggle('sel',on);b.setAttribute('aria-pressed',on);});
+  readTheme();
+}
+document.querySelectorAll('[data-theme-set]').forEach(b=>b.addEventListener('click',()=>{store.set.theme=b.dataset.themeSet;save();applyTheme();Sound.sfx('ui');}));
+matchMedia('(prefers-color-scheme: dark)').addEventListener('change',()=>{if(store.set.theme==='auto')applyTheme();});
 $('sSound').addEventListener('change',e=>{store.set.mute=!e.target.checked;save();Sound.unlock();Sound.setMute();syncMute();});
 $('playB').addEventListener('click',startGame);
 $('againB').addEventListener('click',startGame);
@@ -476,7 +489,7 @@ function openHelp(){if(S.mode==='play')pause();helpFrom=curPanel();show('pHelp')
 function openSet(){if(S.mode==='play')pause();setFrom=curPanel();if(setFrom==='pSet'||setFrom==='pHelp')setFrom=S.mode==='pause'?'pPause':S.mode==='over'?'pOver':'pMenu';syncMenu();show('pSet');}
 function setBack(){show(setFrom);}
 function helpBack(){show(helpFrom);}
-$('setB').addEventListener('click',openSet);$('setB2').addEventListener('click',openSet);$('setBack').addEventListener('click',setBack);
+$('setB').addEventListener('click',openSet);$('setB2').addEventListener('click',openSet);$('menSet').addEventListener('click',openSet);$('setBack').addEventListener('click',setBack);
 $('setHelp').addEventListener('click',openHelp);$('helpB2').addEventListener('click',openHelp);$('helpBack').addEventListener('click',helpBack);
 $('pauseB').addEventListener('click',()=>{if(S.mode==='play')pause();else if(S.mode==='pause')resume();});
 const MUTE_ON='M4 9.5h3.5L12 5.5v13l-4.5-4H4z M16 9a4 4 0 0 1 0 6 M18.6 6.4a7.6 7.6 0 0 1 0 11.2',MUTE_OFF='M4 9.5h3.5L12 5.5v13l-4.5-4H4z M16.5 9.5l5 5 M21.5 9.5l-5 5';
@@ -512,13 +525,12 @@ function sprite(col,size){const s=Math.max(4,Math.round(size)),cv=document.creat
   return cv;}
 function layout(){
   const r=play.getBoundingClientRect(),d=DPR();
-  const side=Math.max(66,4*Math.round(Math.min((r.width-62)/14,40)*.5)+16);
-  cs=Math.max(10,Math.floor(Math.min((r.width-30-2*side)/10,(r.height-10)/20,40)));ms=Math.max(7,Math.round(cs*.5));
-  document.documentElement.style.setProperty('--side',Math.max(side,4*ms+16)+'px');
+  const iw=$('info').getBoundingClientRect().width;
+  ms=Math.max(7,Math.min(12,Math.floor((iw-198)/17.2)));
+  cs=Math.max(10,Math.floor(Math.min((r.width-10)/10,(r.height-10)/20,44)));
   board.style.width=10*cs+'px';board.style.height=20*cs+'px';board.width=Math.round(10*cs*d);board.height=Math.round(20*cs*d);
   holdC.style.width=4*ms+'px';holdC.style.height=2*ms+'px';holdC.width=Math.round(4*ms*d);holdC.height=Math.round(2*ms*d);
-  const nh=6*ms+2*Math.round(ms*.7);
-  nextC.style.width=4*ms+'px';nextC.style.height=nh+'px';nextC.width=Math.round(4*ms*d);nextC.height=Math.round(nh*d);
+  const nw=Math.round(13.2*ms);nextC.style.width=nw+'px';nextC.style.height=2*ms+'px';nextC.width=Math.round(nw*d);nextC.height=Math.round(2*ms*d);
   SPR=COLORS.map(c=>sprite(c,cs*d));SPRM=COLORS.map(c=>sprite(c,ms*d));
 }
 const ro=new ResizeObserver(layout);ro.observe(play);
@@ -551,8 +563,8 @@ function mini(x,t,cx,cy,alpha){const c=ROT[t][0],xs=c.map(q=>q[0]),ys=c.map(q=>q
 function drawSide(){
   const k=holdC.width/(4*ms);hx.setTransform(k,0,0,k,0,0);hx.clearRect(0,0,4*ms,2*ms);
   if(S.hold)mini(hx,S.hold,2*ms,ms,S.canHold?1:.35);
-  nx.setTransform(k,0,0,k,0,0);nx.clearRect(0,0,4*ms,nextC.height/k);
-  const step=2*ms+Math.round(ms*.7);for(let i=0;i<3;i++)if(S.queue[i])mini(nx,S.queue[i],2*ms,ms+i*step,1);
+  nx.setTransform(k,0,0,k,0,0);nx.clearRect(0,0,14*ms,2*ms);
+  for(let i=0;i<3;i++)if(S.queue[i])mini(nx,S.queue[i],2*ms+i*4.6*ms,ms,[1,.85,.7][i]);
 }
 let lastStats='';
 function stats(){
@@ -585,7 +597,13 @@ function frame(now){
   bw.classList.toggle('danger',S.mode==='play'&&S.field.slice(HID,HID+4).some(r=>r.some(v=>v>=0)));
   requestAnimationFrame(frame);
 }
-readTheme();syncMenu();syncMute();layout();show('pMenu');
+// Sichtbare Höhe messen (100dvh stimmt auf manchen Android-Handys beim Start nicht)
+function setAppH(){document.documentElement.style.setProperty('--appH',Math.round(window.innerHeight)+'px');}
+setAppH();window.addEventListener('resize',setAppH);window.addEventListener('orientationchange',()=>setTimeout(setAppH,300));
+if(window.visualViewport)visualViewport.addEventListener('resize',setAppH);
+[150,500,1200,2500].forEach(t=>setTimeout(setAppH,t));
+document.addEventListener('visibilitychange',()=>{if(!document.hidden)setTimeout(setAppH,250);});
+applyTheme();syncMenu();syncMute();layout();show('pMenu');
 requestAnimationFrame(frame);
 document.querySelectorAll('[data-design=retro]').forEach(b=>b.addEventListener('click',()=>{
   try{localStorage.setItem('kloetzli.design','retro');}catch(e){}
