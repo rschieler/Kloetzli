@@ -15,12 +15,17 @@ self.addEventListener('activate', e => {
     .then(() => self.clients.claim()));
 });
 
+// Selbstheilung: Falls eine andere App auf der Domain unseren Cache gelöscht hat, beim nächsten Start neu füllen.
+const heal = () => caches.open(CACHE)
+  .then(c => c.match('./modern.html').then(hit => hit || c.addAll(FILES))).catch(() => {});
+
 self.addEventListener('fetch', e => {
   const req = e.request;
   if (req.method !== 'GET') return;
   const url = new URL(req.url);
   // Seiten: zuerst Netz (für Updates), ohne Netz aus dem Cache
   if (req.mode === 'navigate') {
+    e.waitUntil(heal());
     e.respondWith(fetch(req).then(r => {
       if (r.ok) { const c = r.clone(); caches.open(CACHE).then(x => x.put(req, c)); }
       return r;
