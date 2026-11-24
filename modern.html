@@ -22,11 +22,9 @@
    COLOUR and TYPE: kühles Hellgrau, nachts Tinte; sieben Edelstein-Farben, Koralle als Akzent; Outfit
    LAYOUT: Kopf, drei Kennzahlen, Halten | Feld | Nächste, darunter zwei Reihen Daumentasten */
 :root{color-scheme:light dark;--bg:#eef1f6;--bg2:#dde4f0;--panel:#fff;--ink:#151a26;--muted:#646c84;--line:rgba(21,26,38,.1);
-  --grid:rgba(21,26,38,.06);--board:#fafbfd;--shadow:rgba(32,44,80,.13);--edge:#d6dce8;--press:#edf0f6;--accent:#ff5a6a;--accent2:#ff8a57}
-@media (prefers-color-scheme:dark){:root:not([data-theme=light]){--bg:#0d1016;--bg2:#171c28;--panel:#1a1f2b;--ink:#eef0f6;--muted:#8f97ac;
-  --line:rgba(255,255,255,.09);--grid:rgba(255,255,255,.045);--board:#0a0c12;--shadow:rgba(0,0,0,.5);--edge:#0e1118;--press:#242a38}}
-:root[data-theme=dark]{--bg:#0d1016;--bg2:#171c28;--panel:#1a1f2b;--ink:#eef0f6;--muted:#8f97ac;--line:rgba(255,255,255,.09);
-  --grid:rgba(255,255,255,.045);--board:#0a0c12;--shadow:rgba(0,0,0,.5);--edge:#0e1118;--press:#242a38;color-scheme:dark}
+  --grid:rgba(21,26,38,.06);--cell:transparent;--board:#fafbfd;--boardline:rgba(21,26,38,.12);--ghost:.6;--ghostfill:.12;--shadow:rgba(32,44,80,.13);--edge:#d6dce8;--press:#edf0f6;--accent:#ff5a6a;--accent2:#ff8a57}
+@media (prefers-color-scheme:dark){:root:not([data-theme=light]){--bg:#0b0d12;--bg2:#171c28;--panel:#1a1f2b;--ink:#eef0f6;--muted:#8f97ac;--line:rgba(255,255,255,.09);--grid:rgba(255,255,255,.07);--cell:rgba(255,255,255,.035);--board:#151a25;--boardline:rgba(255,255,255,.2);--ghost:.9;--ghostfill:.2;--shadow:rgba(0,0,0,.55);--edge:#0e1118;--press:#242a38}}
+:root[data-theme=dark]{--bg:#0b0d12;--bg2:#171c28;--panel:#1a1f2b;--ink:#eef0f6;--muted:#8f97ac;--line:rgba(255,255,255,.09);--grid:rgba(255,255,255,.07);--cell:rgba(255,255,255,.035);--board:#151a25;--boardline:rgba(255,255,255,.2);--ghost:.9;--ghostfill:.2;--shadow:rgba(0,0,0,.55);--edge:#0e1118;--press:#242a38;color-scheme:dark}
 :root[data-theme=light]{color-scheme:light}
 *{box-sizing:border-box;min-width:0}
 [hidden]{display:none!important}
@@ -51,7 +49,7 @@ svg.ic{fill:none;stroke:currentColor;stroke-width:2.4;stroke-linecap:round;strok
 .side{width:var(--side,60px);flex:none}
 .card{background:var(--panel);border-radius:14px;padding:8px;box-shadow:0 2px 10px var(--shadow);display:flex;flex-direction:column;align-items:center;gap:6px}
 #holdCard{cursor:pointer}
-#bw{position:relative;flex:none;padding:5px;border-radius:16px;background:var(--board);box-shadow:0 10px 30px var(--shadow),inset 0 0 0 1px var(--line);
+#bw{position:relative;flex:none;padding:5px;border-radius:16px;background:var(--board);box-shadow:0 0 0 1.5px var(--boardline),0 10px 30px var(--shadow);
   transition:box-shadow .3s;touch-action:none}
 #bw.danger{box-shadow:0 0 0 2px rgba(242,84,106,.75),0 0 30px rgba(242,84,106,.35)}
 #bw.thump{animation:thump .14s ease-out}
@@ -498,8 +496,9 @@ function pop(text,cls){const d=document.createElement('div');d.className='pop '+
 
 // ---------- Zeichnen ----------
 const board=$('board'),bx=board.getContext('2d'),holdC=$('holdC'),hx=holdC.getContext('2d'),nextC=$('nextC'),nx=nextC.getContext('2d'),play=$('play');
-let cs=20,ms=10,SPR=[],SPRM=[],gridCol='rgba(21,26,38,.06)';
-function readTheme(){gridCol=getComputedStyle(document.documentElement).getPropertyValue('--grid').trim()||gridCol;}
+let cs=20,ms=10,SPR=[],SPRM=[],gridCol='rgba(21,26,38,.06)',cellCol='transparent',ghostA=.6,ghostF=.12;
+function readTheme(){const cs_=getComputedStyle(document.documentElement),v=n=>cs_.getPropertyValue(n).trim();
+  gridCol=v('--grid')||gridCol;cellCol=v('--cell')||'transparent';ghostA=parseFloat(v('--ghost'))||.6;ghostF=parseFloat(v('--ghostfill'))||.12;}
 matchMedia('(prefers-color-scheme: dark)').addEventListener('change',readTheme);
 const mo=new MutationObserver(readTheme);mo.observe(document.documentElement,{attributes:true,attributeFilter:['data-theme']});
 function shade(hex,a){const n=parseInt(hex.slice(1),16),t=a<0?0:255,p=Math.abs(a);
@@ -529,6 +528,7 @@ function burst(rows){if(reduce)return;for(const y of rows){if(y<HID)continue;for
   for(let k=0;k<2;k++)P.push({x:(x+.5)*cs,y:(y-HID+.5)*cs,vx:(Math.random()-.5)*.35,vy:-Math.random()*.3-.05,l:1,col:COLORS[v],s:cs*(.16+Math.random()*.14)});}}}
 function drawBoard(){
   bx.setTransform(board.width/(10*cs),0,0,board.height/(20*cs),0,0);bx.clearRect(0,0,10*cs,20*cs);
+  if(cellCol!=='transparent'){bx.fillStyle=cellCol;for(let y=0;y<20;y++)for(let x=0;x<10;x++){rr(bx,x*cs+2,y*cs+2,cs-4,cs-4,cs*.2);bx.fill();}}
   bx.fillStyle=gridCol;for(let i=1;i<10;i++)bx.fillRect(i*cs-.5,0,1,20*cs);for(let j=1;j<20;j++)bx.fillRect(0,j*cs-.5,10*cs,1);
   const gray=S.mode==='over'&&!S.won?20-Math.floor(S.overT/32):99;
   for(let y=HID;y<H;y++){const vy=y-HID;for(let x=0;x<W;x++){const v=S.field[y][x];if(v>=0)bx.drawImage(SPR[vy>=gray?7:v],x*cs,vy*cs,cs,cs);}}
@@ -537,8 +537,8 @@ function drawBoard(){
   if(S.cur){
     const ti=TYPES.indexOf(S.cur.t),col=COLORS[ti];
     if(store.set.ghost){const gy=ghostY();if(gy>S.cur.y){const gc=cellsAt(S.cur,gy).filter(c=>c[1]>=HID);
-      bx.globalAlpha=.12;bx.fillStyle=col;for(const [x,y] of gc){rr(bx,x*cs+3,(y-HID)*cs+3,cs-6,cs-6,cs*.18);bx.fill();}
-      bx.globalAlpha=.6;bx.strokeStyle=col;bx.lineWidth=2;for(const [x,y] of gc){rr(bx,x*cs+3,(y-HID)*cs+3,cs-6,cs-6,cs*.18);bx.stroke();}
+      bx.globalAlpha=ghostF;bx.fillStyle=col;for(const [x,y] of gc){rr(bx,x*cs+3,(y-HID)*cs+3,cs-6,cs-6,cs*.18);bx.fill();}
+      bx.globalAlpha=ghostA;bx.strokeStyle=col;bx.lineWidth=2;for(const [x,y] of gc){rr(bx,x*cs+3,(y-HID)*cs+3,cs-6,cs-6,cs*.18);bx.stroke();}
       bx.globalAlpha=1;}}
     for(const [x,y] of cells(S.cur))if(y>=HID)bx.drawImage(SPR[ti],x*cs,(y-HID)*cs,cs,cs);
   }

@@ -1,6 +1,6 @@
 // Klötzli – Service Worker
 // Bei jeder Änderung an Dateien die Versionsnummer erhöhen.
-const CACHE = 'kloetzli-v4';
+const CACHE = 'kloetzli-v5';
 const FILES = ['./', './index.html', './retro.html', './modern.html', './manifest.webmanifest',
   './icon-192.png', './icon-512.png', './icon-maskable-512.png', './apple-touch-icon.png'];
 
