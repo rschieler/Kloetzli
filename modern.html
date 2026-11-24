@@ -117,7 +117,7 @@ button:focus-visible,.sw:focus-visible,#holdCard:focus-visible{outline:3px solid
   <header>
     <div class="brand"><svg class="logo" viewBox="0 0 26 26" aria-hidden="true"><rect x="1" y="5" width="7.4" height="7.4" rx="2" fill="#36c9e0"/><rect x="9.3" y="5" width="7.4" height="7.4" rx="2" fill="#f5c542"/><rect x="17.6" y="5" width="7.4" height="7.4" rx="2" fill="#f2546a"/><rect x="9.3" y="13.3" width="7.4" height="7.4" rx="2" fill="#a66de8"/></svg>Klötzli</div>
     <div class="hb">
-      <button class="ib" id="helpB" aria-label="Steuerung">?</button>
+      <button class="ib" id="setB" aria-label="Einstellungen"><svg class="ic" viewBox="0 0 24 24" style="stroke-width:2.1"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></button>
       <button class="ib" id="muteB" aria-label="Ton an oder aus"><svg class="ic" viewBox="0 0 24 24"><path id="muteP" d=""/></svg></button>
       <button class="ib" id="pauseB" aria-label="Pause"><svg class="ic" viewBox="0 0 24 24"><path d="M9 6v12M15 6v12"/></svg></button>
     </div>
@@ -151,7 +151,7 @@ button:focus-visible,.sw:focus-visible,#holdCard:focus-visible{outline:3px solid
     <div class="row" id="lvRow"><span>Startlevel</span><div class="stepper"><button id="lvM" aria-label="Level tiefer">−</button><b id="lvV">1</b><button id="lvP" aria-label="Level höher">+</button></div></div>
     <label class="row"><span>Musik</span><input type="checkbox" class="sw" id="oMusic"></label>
     <label class="row"><span>Schattenstein</span><input type="checkbox" class="sw" id="oGhost"></label>
-    <div class="row"><span>Design</span><div class="seg dseg" role="group" aria-label="Design"><button id="toRetro" aria-pressed="false">Retro</button><button class="sel" aria-pressed="true">Modern</button></div></div>
+    <div class="row"><span>Design</span><div class="seg dseg" role="group" aria-label="Design"><button data-design="retro" aria-pressed="false">Retro</button><button class="sel" aria-pressed="true">Modern</button></div></div>
     <button class="primary" id="playB">Spielen</button>
     <div class="best"><span class="k" id="bestK">Bestenliste</span><ol id="bestL"></ol></div>
     <button class="second" id="helpB2">Steuerung</button>
@@ -159,6 +159,7 @@ button:focus-visible,.sw:focus-visible,#holdCard:focus-visible{outline:3px solid
   <div class="panel" id="pPause" hidden>
     <h2>Pause</h2>
     <button class="primary" id="resB">Weiter</button>
+    <button class="second" id="setB2">Einstellungen</button>
     <button class="second" id="rstB">Neu starten</button>
     <button class="second" id="menB">Menü</button>
   </div>
@@ -168,6 +169,16 @@ button:focus-visible,.sw:focus-visible,#holdCard:focus-visible{outline:3px solid
     <p class="note" id="oN"></p>
     <button class="primary" id="againB">Nochmal</button>
     <button class="second" id="menB2">Menü</button>
+  </div>
+  <div class="panel" id="pSet" hidden>
+    <h2>Einstellungen</h2>
+    <div class="row"><span>Design</span><div class="seg dseg" role="group" aria-label="Design"><button data-design="retro" aria-pressed="false">Retro</button><button class="sel" aria-pressed="true">Modern</button></div></div>
+    <label class="row"><span>Musik</span><input type="checkbox" class="sw" id="sMusic"></label>
+    <label class="row"><span>Schattenstein</span><input type="checkbox" class="sw" id="sGhost"></label>
+    <label class="row"><span>Ton</span><input type="checkbox" class="sw" id="sSound"></label>
+    <p class="note">Beim Wechsel auf Retro endet ein laufendes Spiel.</p>
+    <button class="second" id="setHelp">Steuerung</button>
+    <button class="primary" id="setBack">Zurück</button>
   </div>
   <div class="panel hl" id="pHelp" hidden>
     <h2>Steuerung</h2>
@@ -421,7 +432,7 @@ bw.addEventListener('pointerup',gEnd);bw.addEventListener('pointercancel',e=>{if
 const KM={ArrowLeft:'left',ArrowRight:'right',ArrowDown:'soft',Space:'hard',ArrowUp:'cw',KeyX:'cw',KeyZ:'ccw',KeyY:'ccw',ControlLeft:'ccw',
   KeyC:'hold',ShiftLeft:'hold',ShiftRight:'hold',Escape:'pause',KeyP:'pause'};
 window.addEventListener('keydown',e=>{
-  if(!$('pHelp').hidden&&$('ov').classList.contains('show')){if(e.code==='Escape'){e.preventDefault();helpBack();}return;}
+  if(ov.classList.contains('show')&&(!$('pHelp').hidden||!$('pSet').hidden)){if(e.code==='Escape'){e.preventDefault();$('pHelp').hidden?setBack():helpBack();}return;}
   if(e.code==='Enter'&&!(document.activeElement&&document.activeElement.tagName==='BUTTON')){
     if(S.mode==='menu'||(S.mode==='over'&&S.overShown)){e.preventDefault();startGame();}else if(S.mode==='pause'){e.preventDefault();resume();}return;}
   const k=KM[e.code];if(!k||(S.mode!=='play'&&k!=='pause'))return;
@@ -432,7 +443,7 @@ window.addEventListener('blur',releaseAll);
 document.addEventListener('contextmenu',e=>e.preventDefault());
 
 // ---------- Menü & Overlays ----------
-const ov=$('ov'),PANELS=['pMenu','pPause','pOver','pHelp'];let helpFrom='pMenu';
+const ov=$('ov'),PANELS=['pMenu','pPause','pOver','pHelp','pSet'];let helpFrom='pMenu',setFrom='pMenu';
 function show(id){PANELS.forEach(p=>$(p).hidden=p!==id);ov.classList.add('show');}
 function hideOv(){ov.classList.remove('show');}
 const fmtN=n=>Math.round(Number(n)||0).toLocaleString('de-CH');
@@ -442,7 +453,7 @@ function syncMenu(){
   const s=store.set;
   document.querySelectorAll('.seg [data-mode]').forEach(b=>b.classList.toggle('sel',b.dataset.mode===s.mode));
   $('lvRow').hidden=s.mode!=='marathon';$('lvV').textContent=s.level;
-  $('oMusic').checked=s.music;$('oGhost').checked=s.ghost;
+  $('oMusic').checked=s.music;$('oGhost').checked=s.ghost;$('sMusic').checked=s.music;$('sGhost').checked=s.ghost;$('sSound').checked=!s.mute;
   $('modeNote').textContent=s.mode==='marathon'?'Endlos spielen – alle 10 Linien wird es schneller.':'40 Linien so schnell wie möglich abbauen.';
   $('bestK').textContent='Bestenliste '+(s.mode==='marathon'?'Marathon':'Sprint 40');
   const L=store.best[s.mode];
@@ -453,20 +464,25 @@ function syncMenu(){
 document.querySelectorAll('.seg [data-mode]').forEach(b=>b.addEventListener('click',()=>{store.set.mode=b.dataset.mode;save();syncMenu();Sound.sfx('ui');}));
 $('lvM').addEventListener('click',()=>{store.set.level=Math.max(1,store.set.level-1);save();syncMenu();Sound.sfx('ui');});
 $('lvP').addEventListener('click',()=>{store.set.level=Math.min(15,store.set.level+1);save();syncMenu();Sound.sfx('ui');});
-$('oMusic').addEventListener('change',e=>{store.set.music=e.target.checked;save();});
-$('oGhost').addEventListener('change',e=>{store.set.ghost=e.target.checked;save();});
+['oMusic','sMusic'].forEach(id=>$(id).addEventListener('change',e=>{store.set.music=e.target.checked;save();syncMenu();}));
+['oGhost','sGhost'].forEach(id=>$(id).addEventListener('change',e=>{store.set.ghost=e.target.checked;save();syncMenu();}));
+$('sSound').addEventListener('change',e=>{store.set.mute=!e.target.checked;save();Sound.unlock();Sound.setMute();syncMute();});
 $('playB').addEventListener('click',startGame);
 $('againB').addEventListener('click',startGame);
 $('resB').addEventListener('click',resume);
 $('rstB').addEventListener('click',()=>{S.mode='menu';startGame();});
 const toMenu=()=>{wakeOff();Sound.stopMusic();S.mode='menu';S.cur=null;syncMenu();show('pMenu');};
 $('menB').addEventListener('click',toMenu);$('menB2').addEventListener('click',toMenu);
-function openHelp(){if(S.mode==='play')pause();helpFrom=S.mode==='pause'?'pPause':S.mode==='over'?'pOver':'pMenu';show('pHelp');}
+const curPanel=()=>ov.classList.contains('show')?(PANELS.find(p=>!$(p).hidden)||'pMenu'):'pMenu';
+function openHelp(){if(S.mode==='play')pause();helpFrom=curPanel();show('pHelp');}
+function openSet(){if(S.mode==='play')pause();setFrom=curPanel();if(setFrom==='pSet'||setFrom==='pHelp')setFrom=S.mode==='pause'?'pPause':S.mode==='over'?'pOver':'pMenu';syncMenu();show('pSet');}
+function setBack(){show(setFrom);}
 function helpBack(){show(helpFrom);}
-$('helpB').addEventListener('click',openHelp);$('helpB2').addEventListener('click',openHelp);$('helpBack').addEventListener('click',helpBack);
+$('setB').addEventListener('click',openSet);$('setB2').addEventListener('click',openSet);$('setBack').addEventListener('click',setBack);
+$('setHelp').addEventListener('click',openHelp);$('helpB2').addEventListener('click',openHelp);$('helpBack').addEventListener('click',helpBack);
 $('pauseB').addEventListener('click',()=>{if(S.mode==='play')pause();else if(S.mode==='pause')resume();});
 const MUTE_ON='M4 9.5h3.5L12 5.5v13l-4.5-4H4z M16 9a4 4 0 0 1 0 6 M18.6 6.4a7.6 7.6 0 0 1 0 11.2',MUTE_OFF='M4 9.5h3.5L12 5.5v13l-4.5-4H4z M16.5 9.5l5 5 M21.5 9.5l-5 5';
-const syncMute=()=>{$('muteP').setAttribute('d',store.set.mute?MUTE_OFF:MUTE_ON);};
+const syncMute=()=>{$('muteP').setAttribute('d',store.set.mute?MUTE_OFF:MUTE_ON);$('sSound').checked=!store.set.mute;};
 $('muteB').addEventListener('click',()=>{store.set.mute=!store.set.mute;save();Sound.unlock();Sound.setMute();syncMute();});
 function showOver(){
   const sp=S.m==='sprint',won=sp&&S.won;
@@ -571,9 +587,9 @@ function frame(now){
 }
 readTheme();syncMenu();syncMute();layout();show('pMenu');
 requestAnimationFrame(frame);
-$('toRetro').addEventListener('click',()=>{
+document.querySelectorAll('[data-design=retro]').forEach(b=>b.addEventListener('click',()=>{
   try{localStorage.setItem('kloetzli.design','retro');}catch(e){}
-  Sound.stopMusic();wakeOff();location.replace('retro.html');});
+  Sound.stopMusic();wakeOff();location.replace('retro.html');}));
 if('serviceWorker' in navigator)navigator.serviceWorker.register('sw.js').catch(()=>{});
 }
 </script>
